@@ -16,6 +16,10 @@ jobs:
           - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Install EGL mesa
+        run: |
+          sudo apt-get update -y -qq
+          sudo apt-get install -y -qq libegl1-mesa libegl1-mesa-dev
       - name: asdf_plugin_test
         uses: asdf-vm/actions/plugin-test@v3
         with:
