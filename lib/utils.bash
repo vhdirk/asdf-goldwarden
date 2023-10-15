@@ -41,8 +41,12 @@ download_release() {
 	version="$1"
 	filename="$2"
 
-	# TODO: Adapt the release URL convention for goldwarden
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	local arch
+	arch=$(uname -m | tr '[:upper:]' '[:lower:]')
+	local kernel
+	kernel=$(uname -s | tr '[:upper:]' '[:lower:]')
+
+	url="$GH_REPO/releases/download/v${version}/goldwarden_${kernel}_${arch}"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -61,7 +65,6 @@ install_version() {
 		mkdir -p "$install_path"
 		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
 
-		# TODO: Assert goldwarden executable exists.
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
 		test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
